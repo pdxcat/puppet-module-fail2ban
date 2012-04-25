@@ -14,19 +14,21 @@ class fail2ban (
   }
 
   file { '/etc/fail2ban/fail2ban.conf':
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-    source => $config_file,
-    notify => Service['fail2ban'],
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    source  => $config_file,
+    notify  => Service['fail2ban'],
+    require => Package['fail2ban'],
   }
 
   file { '/etc/fail2ban/jail.conf':
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-    source => $jail_file,
-    notify => Service['fail2ban'],
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    source  => $jail_file,
+    notify  => Service['fail2ban'],
+    require => Package['fail2ban'],
   }
 
 }
