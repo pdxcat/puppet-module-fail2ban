@@ -1,34 +1,44 @@
-#
-#
-#
-
 class fail2ban (
-  $config_file = "puppet://$server/modules/fail2ban/fail2ban.conf",
-  $jail_file = "puppet://$server/modules/fail2ban/jail.conf"
+  $config_file = undef,
+  $jail_file   = undef
 ) {
-  package { 'fail2ban': ensure => installed }
+  include fail2ban::data
 
-  service { 'fail2ban':
-    ensure  => running,
-    require => Package['fail2ban'],
+  if !$config_file {
+    $config_file_source_real = $fail2ban::data::config_file_source
+  } else {
+    $config_file_source_real = $config_file
   }
 
-  file { '/etc/fail2ban/fail2ban.conf':
+  if !$jail_file {
+    $jail_file_source_real = $fail2ban::data::jail_file_source
+  } else {
+    $jail_file_source_real = $jail_file
+  }
+
+  package { $fail2ban::data::package:
+    ensure => installed,
+  }
+
+  service { $fail2ban::data::service:
+    ensure  => running,
+    require => Package[$fail2ban::data::package],
+  }
+
+  File {
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
-    source  => $config_file,
-    notify  => Service['fail2ban'],
-    require => Package['fail2ban'],
+    notify  => Service[$fail2ban::data::service],
+    require => Package[$fail2ban::data::package],
+  }
+
+  file { $fail2ban::data::config_file:
+    source => $config_file_source_real,
   }
 
   file { '/etc/fail2ban/jail.conf':
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
-    source  => $jail_file,
-    notify  => Service['fail2ban'],
-    require => Package['fail2ban'],
+    source => $jail_file_source_real,
   }
 
 }
