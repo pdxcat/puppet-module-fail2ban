@@ -1,7 +1,7 @@
 class fail2ban::data {
 
   case $::osfamily {
-    default:  { fail("osfamily $::osfamily not supported") }
+    default:  { fail("osfamily ${::osfamily} not supported") }
     'Debian': {
       $package            = 'fail2ban'
       $service            = 'fail2ban'
