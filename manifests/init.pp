@@ -1,44 +1,36 @@
-class fail2ban (
-  $config_file = undef,
-  $jail_file   = undef
-) {
-  include fail2ban::data
+class fail2ban {
+  include fail2ban::params
 
-  if !$config_file {
-    $config_file_source_real = $fail2ban::data::config_file_source
-  } else {
-    $config_file_source_real = $config_file
-  }
+  $config_file_source_real = $fail2ban::params::config_file_source
+  $jail_file_source_real = $fail2ban::params::jail_file_source
 
-  if !$jail_file {
-    $jail_file_source_real = $fail2ban::data::jail_file_source
-  } else {
-    $jail_file_source_real = $jail_file
-  }
+  $ddos_jail = $fail2ban::params::ddos_jail
+  $loglevel  = $fail2ban::params::loglevel
+  $ssh_jail  = $fail2ban::params::ssh_jail
 
-  package { $fail2ban::data::package:
+  package { $fail2ban::params::package:
     ensure => installed,
   }
 
-  service { $fail2ban::data::service:
+  service { $fail2ban::params::service:
     ensure  => running,
-    require => Package[$fail2ban::data::package],
+    require => Package[$fail2ban::params::package],
   }
 
   File {
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
-    notify  => Service[$fail2ban::data::service],
-    require => Package[$fail2ban::data::package],
+    notify  => Service[$fail2ban::params::service],
+    require => Package[$fail2ban::params::package],
   }
 
-  file { $fail2ban::data::config_file:
-    source => $config_file_source_real,
+  file { $fail2ban::params::config_file:
+    content => template('fail2ban/fail2ban.local.erb'),
   }
 
-  file { '/etc/fail2ban/jail.conf':
-    source => $jail_file_source_real,
+  file { $fail2ban::params::jail_file:
+    content => template('fail2ban/jail.local.erb'),
   }
 
 }

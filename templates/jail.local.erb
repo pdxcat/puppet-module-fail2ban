@@ -1,0 +1,15 @@
+[DEFAULT]
+ignoreip = 131.252.0.0/16
+bantime  = 3600
+maxretry = 25
+destemail = root@cat.pdx.edu
+
+[<%= @ssh_jail %>]
+enabled  = true
+banaction = iptables-allports
+
+<% if @ddos_jail != nil %>
+[<%= @ddos_jail %>]
+enabled  = true
+banaction = iptables-allports
+<% end %>
