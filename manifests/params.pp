@@ -9,11 +9,11 @@ class fail2ban::params {
 
       if versioncmp($::operatingsystemrelease, '16.04') >= 0  {
         $ddos_jail          = 'sshd-ddos'
-        $loglevel           = 'ERROR'
+        $loglevel           = 'INFO'
         $ssh_jail           = 'sshd'
       } else {
         $ddos_jail          = 'ssh-ddos'
-        $loglevel           = '1'
+        $loglevel           = '3'
         $ssh_jail           = 'ssh'
       }
     }
@@ -27,12 +27,12 @@ class fail2ban::params {
       case $::operatingsystemmajrelease {
         '5': {
           $ddos_jail          = undef
-          $loglevel           = '2'
+          $loglevel           = '3'
           $ssh_jail           = 'ssh-iptables'
         }
         default: {
           $ddos_jail          = 'sshd-ddos'
-          $loglevel           = 'WARN'
+          $loglevel           = 'INFO'
           $ssh_jail           = 'sshd'
         }
       }
