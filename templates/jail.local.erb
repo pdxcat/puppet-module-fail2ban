@@ -8,8 +8,11 @@ destemail = root@cat.pdx.edu
 enabled  = true
 banaction = iptables-allports
 
-<% if @ddos_jail != nil %>
+<% if @ddos_jail != nil -%>
 [<%= @ddos_jail %>]
 enabled  = true
 banaction = iptables-allports
-<% end %>
+<% if @osfamily == 'RedHat' -%>
+logpath = /var/log/auth.log 
+<% end -%>
+<% end -%>
