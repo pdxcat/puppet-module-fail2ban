@@ -9,12 +9,12 @@ class fail2ban {
   $ssh_jail  = $fail2ban::params::ssh_jail
 
   package { $fail2ban::params::package:
-    ensure => installed,
+    ensure          => installed,
+    install_options => ['-o', 'Dpkg::Options::=--post-invoke=/usr/bin/service fail2ban stop 2> /dev/null >/dev/null|| /bin/true'],
   }
-
+  ->
   service { $fail2ban::params::service:
     ensure  => running,
-    require => Package[$fail2ban::params::package],
   }
 
   File {
