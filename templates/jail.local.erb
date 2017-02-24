@@ -6,11 +6,13 @@ destemail = root@cat.pdx.edu
 
 [<%= @ssh_jail %>]
 enabled  = true
+backend = auto
 banaction = iptables-allports
 
 <% if @ddos_jail != nil -%>
 [<%= @ddos_jail %>]
 enabled  = true
+backend = auto
 banaction = iptables-allports
 <% if @osfamily == 'RedHat' -%>
 logpath = /var/log/auth.log 
